@@ -1,0 +1,14 @@
+docs/*
+
+!docs/Doxygen
+docs/Doxygen/*
+!docs/Doxygen/resources
+!docs/Doxygen/Doxyfile
+
+!docs/Sphinx
+docs/Sphinx/*
+!docs/Sphinx/Makefile
+!docs/Sphinx/make.bat
+!docs/Sphinx/source
+
+!docs/Tutorials
