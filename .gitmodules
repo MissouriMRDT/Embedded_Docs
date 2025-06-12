@@ -1,0 +1,18 @@
+[submodule "RoveMotor"]
+	path = RoveMotor
+	url = https://github.com/MissouriMRDT/RoveMotor
+[submodule "RoveJoint"]
+	path = RoveJoint
+	url = https://github.com/MissouriMRDT/RoveJoint
+[submodule "RoveEncoder"]
+	path = RoveEncoder
+	url = https://github.com/MissouriMRDT/RoveEncoder
+[submodule "RoveSwitch"]
+	path = RoveSwitch
+	url = https://github.com/MissouriMRDT/RoveSwitch
+[submodule "RoveControl"]
+	path = RoveControl
+	url = https://github.com/MissouriMRDT/RoveControl
+[submodule "RoveComm_Arduino"]
+	path = RoveComm_Arduino
+	url = https://github.com/MissouriMRDT/RoveComm_Arduino
