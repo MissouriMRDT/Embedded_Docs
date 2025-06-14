@@ -2,7 +2,24 @@
     background-color: #9a0020;
 }
 
-/* dt {
-    color: #9a0020;
-    border-top: 3px solid #db8e88;
-} */
+/* Extremely hacky way to put the logo on the top */
+/* .wy-side-nav-search::before {
+    content: "";
+    display: block;
+    width: 30px;
+    height: 30px;
+    margin: 5px;
+    background-image: url(../_images/logo.png);
+    background-size: contain;
+    background-color: white;
+    border-radius: 10px;
+    float: left;
+    z-index: 10;
+}*/
+
+.wy-nav-side {
+    background-image: url(outlined-logo.png);
+    background-size: 400px;
+    background-position: 40% 100%;
+    background-repeat: no-repeat;
+}

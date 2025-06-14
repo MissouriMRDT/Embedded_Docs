@@ -1,13 +1,21 @@
-MRDT Embedded Software Documentation
-====================================
+|mrdt| MRDT Embedded Software Guide
+============================
 
-.. doxygenclass:: RoveMotor
-   :members:
+.. |mrdt| image:: logo.png
+    :width: 50px
 
-.. doxygenclass:: RoveVESC
-   :members:
+Welcome to the embedded software documentation for the Missouri S&T Mars Rover
+Design Team. This wiki contains API docs, setup guides, tutorials,
+tips & tricks, and best practices for writing our embedded software.
+
+.. image:: teensy_henge.jpg
+    :width: 75%
+    :alt: Teensy-Henge
+
+If you're a noob, here are some instructions to get you set up:
+:ref:`getting-started`.
 
 .. toctree::
-   :maxdepth: 2
-   :caption: Contents:
-
+    getting-started/index
+    getting-started/embedded-primer
+    getting-started/installation-guide

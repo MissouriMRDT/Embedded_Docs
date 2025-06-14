@@ -10,5 +10,7 @@ docs/Sphinx/*
 !docs/Sphinx/Makefile
 !docs/Sphinx/make.bat
 !docs/Sphinx/source
+!docs/Sphinx/pyvenv.cfg
+!docs/Sphinx/requirements.txt
 
 !docs/Tutorials
