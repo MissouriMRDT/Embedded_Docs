@@ -18,7 +18,7 @@ Find more information about each software below.
 |git| Git
 ---------
 
-.. |git| image:: logos/git-icon.png
+.. |git| image:: ../logos/git-icon.png
     :width: 40px
 
 Git is a tool used almost universally across the software industry for version
@@ -107,7 +107,7 @@ However, depending on your system, there might be better alternatives.
 |vscode| VS Code
 ----------------
 
-.. |vscode| image:: logos/vscode-icon.png
+.. |vscode| image:: ../logos/vscode-icon.png
     :width: 30px
 
 Not to be confused with Visual Studio! That's a real IDE.
@@ -171,7 +171,7 @@ you probably don't need to worry about this.
 |platformio| Platform IO
 ------------------------
 
-.. |platformio| image:: logos/platformio-icon.png
+.. |platformio| image:: ../logos/platformio-icon.png
     :width: 40px
 
 While Platform IO comes as its own IDE, it's much more convenient to use the
@@ -194,6 +194,60 @@ Otherwise, you'll have to restart the installation.
     default) and ``python3-venv``, or else Platform IO will complain that it
     can't find your python interpreter. If you're on Ubuntu,
     install them with ``sudo apt install python3-full``
+
+Putting It All Together
+-----------------------
+
+To check that everything is installed correctly, let's clone a repo and compile
+some code. If you prefer GitHub Desktop, you can do everything through that,
+but it is much more convenient to do it in VS Code.
+
+Return to the file explorer tab. There should be a button to "Open Folder", and
+if git is installed correctly there should be a button to "Clone Repository".
+Click "Clone Repository" and in the search bar, select "Clone from GitHub".
+VS Code might ask you to log in to your GitHub account. Because you're in the
+organization, MissouriMRDT repos should appear at the top of the list.
+
+.. image:: screenshots/git-clone.png
+
+For this example, I'll use ``ArmBoard_Software`` because it is relatively
+complex and has multiple dependencies, but you can use any board that has a
+relatively recent revision (we have only used Platform IO since 2024).
+
+Select a location to clone your repo. The location does not matter, but popular
+locations include ``Documents/PlatformIO/Projects``
+(default Platform IO location) and ``Documents/GitHub``
+(default GitHub Desktop location). After you've cloned the repo, you don't need
+to clone it again. You can just select "Open Folder" and select the folder that
+you cloned the repo to.
+
+When you first clone the repo, it will be on the default branch. You need to
+"checkout" a specific revision. Click the little branch icon in the bottom left
+and select the most recent revision from the search bar. At the time of writing
+this was 2025_Rev1.
+
+.. image:: screenshots/git-checkout.png
+
+After you've switched branches, go to File Explorer. There should be a bunch of
+folders and a ``platformio.ini`` file. Platform IO only checks if it should
+open when you first open a folder, so check if there's a little dropdown menu
+in the upper right.
+
+.. image:: screenshots/pio-not-started.png
+
+To start Platform IO, click on the alien icon on the side bar. A message should
+pop up on the bottom of the screen saying that Platform IO is being
+initialized. If you haven't opened a Rover project before, it could take a few
+minutes because it has to download all the tools and libraries needed to
+compile and upload code for the Teensy microcontroller. It will also download
+all of the libraries specified in ``platformio.ini``. When it's done, click the
+check mark in the uppr right. A terminal will open and attempt to compile the
+project.
+
+.. image:: screenshots/pio-build.png
+
+If you've gotten this far, congratulations! You're all set! Now, we can move on
+to the fun stuff.
 
 .. toctree::
     :maxdepth: 2

@@ -1,4 +1,5 @@
 .. _`embedded-primer`:
+
 Embedded Primer
 ===============
 
@@ -52,6 +53,11 @@ Random Access Memory (RAM)
     Memory a program uses while it is running, which is separate from the flash
     memory. Unlike flash memory RAM is "volatile", meaning it is lost when the
     microcontroller loses power. A Teensy has 1 megabyte of RAM.
+
+Protocol
+    A method of sending information from one place to another that both sides
+    agree on. Some protocols you will learn about include SPI, I2C, CAN,
+    Ethernet, USB, and our own custom protocol RoveComm, among others.
 
 .. toctree::
     :maxdepth: 2

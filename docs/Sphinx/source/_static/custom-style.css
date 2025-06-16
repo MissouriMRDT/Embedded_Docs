@@ -2,24 +2,26 @@
     background-color: #9a0020;
 }
 
-/* Extremely hacky way to put the logo on the top */
-/* .wy-side-nav-search::before {
+div[role=contentinfo]::before {
     content: "";
     display: block;
     width: 30px;
     height: 30px;
     margin: 5px;
-    background-image: url(../_images/logo.png);
+    background-image: url(mrdt-logo.png);
     background-size: contain;
-    background-color: white;
-    border-radius: 10px;
     float: left;
     z-index: 10;
-}*/
+}
 
 .wy-nav-side {
-    background-image: url(outlined-logo.png);
+    background-image: url(mrdt-logo-outlined.png);
     background-size: 400px;
     background-position: 40% 100%;
     background-repeat: no-repeat;
+    box-shadow: inset #404040 0px -70px 100px;
+}
+
+div.wy-menu > ul > li.toctree-l1:not(.current) {
+    background-color: rgba(64, 64, 64, 0.5);
 }

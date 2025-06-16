@@ -9,7 +9,7 @@
 project = "MRDT Embedded Docs"
 copyright = "2025, MissouriMRDT"
 author = "MissouriMRDT"
-html_favicon = "logo.png"
+html_favicon = "logos/mrdt-logo.png"
 
 # -- General configuration ---------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration

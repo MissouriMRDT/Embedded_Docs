@@ -1,7 +1,7 @@
 |mrdt| MRDT Embedded Software Guide
-============================
+===================================
 
-.. |mrdt| image:: logo.png
+.. |mrdt| image:: logos/mrdt-logo.png
     :width: 50px
 
 Welcome to the embedded software documentation for the Missouri S&T Mars Rover
@@ -19,3 +19,5 @@ If you're a noob, here are some instructions to get you set up:
     getting-started/index
     getting-started/embedded-primer
     getting-started/installation-guide
+    learning-material/intro-to-cpp
+    learning-material/arduino-framework
