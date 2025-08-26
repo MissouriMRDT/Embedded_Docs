@@ -16,5 +16,12 @@ In ordinary C++, every program starts with the `main()` function.
 Serial Debugger
 ---------------
 
+.. doxygenindex::
+    :project: EmbeddedLibs
+
 Basic I/O
 ---------
+
+.. .. doxygenclass:: RoveCommEthernet
+..    :project: EmbeddedLibs
+..    :members:

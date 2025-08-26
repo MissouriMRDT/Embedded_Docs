@@ -37,7 +37,6 @@ Function (also called a Method or a Procedure)
     returning to where it left off.
 
 .. code:: c++
-    :number-lines:
 
     int main() {
         return 0;
@@ -55,7 +54,6 @@ It requires interacting with the kernel and its device drivers. Luckily for us,
 C comes with a standard library that does all the heavy lifting for us.
 
 .. code:: c++
-    :number-lines:
 
     #include <stdio.h>
 
@@ -76,7 +74,6 @@ Parameter (also called an Argument)
 Now, let's get a little funky by defining some functions of our own:
 
 .. code:: c++
-    :number-lines:
 
     #include <stdio.h>
 
@@ -111,7 +108,6 @@ Variable
     A name given to a value to save it for later.
 
 .. code:: c++
-    :number-lines:
 
     #include <stdio.h>
 
@@ -158,7 +154,6 @@ Scope
 In C, a new scope is created between every pair of curly braces ``{}``.
 
 .. code:: c++
-    :number-lines:
 
     // Global scope
     int sum;
@@ -227,7 +222,6 @@ All variables can also be declared as ``const`` which prevents them from being
 accidentally changed.
 
 .. code:: c++
-    :number-lines:
 
     int main() {
         float f1 = 3.64f;
@@ -242,7 +236,6 @@ variable must be known at compile time. In Python you could do something like
 this:
 
 .. code:: python
-    :number-lines:
 
     # Declare variable x
     x = 21
@@ -257,7 +250,6 @@ that. In C, variables are allocated next to each other one by one in a region
 of memory called the "stack" which you can imagine like a stack of books.
 
 .. code:: c++
-    :number-lines:
 
     int main() {
         int a = 1;
@@ -277,14 +269,16 @@ of memory called the "stack" which you can imagine like a stack of books.
 
 Sure, we reassigned ``b``, but we could do that because ``a`` already contained
 an ``int``. It's like sliding a new book into the middle of the stack. It needs
-to be the exact same size as the old book, or else you'd cause the whole stack
-to tip over!
+to be the exact same size as the old book, or else you'd have to move all the
+books above the old book out of the way!
 
-Python gets around this by storing all its variables in a big "heap" of books.
+Python gets around this by storing all its variables in a big "heap" of books,
+which behaves like a bunch of shelves with books scattered around all over.
 Sure, you can remove and add books of different sizes wherever you please, but
-the downside is that it takes a longer to find the book you're looking for.
-This is one of the (many) things that makes C way faster than Python, at the
-cost of some flexibility.
+the downside is that it takes a longer to find the book you're looking for
+because you have to find it by its Dewey Decimal number. This is one of the
+(many) things that makes C way faster than Python, at the cost of some
+flexibility.
 
 For more information on the technical details, check out `this <https://www.geeksforgeeks.org/function-call-stack-in-c/>`_
 article about the function call stack.
@@ -302,7 +296,6 @@ architectures can vary wildly between chips. To make code more portable, C
 provides *exact-width integer types*.
 
 .. code:: c++
-    :number-lines:
 
     // Contains definitions for exact-width integer types
     #include <stdint.h>
@@ -318,7 +311,6 @@ These will appear quite a lot once we get into Arduino code.
 You can get the size in bytes of any type with the ``sizeof`` operator:
 
 .. code:: c++
-    :number-lines:
 
     #include <stdint.h>
 
@@ -342,7 +334,6 @@ change the type of a variable in C, so some extra work has to happen to convert
 a decimal value into an integer. This is called "casting":
 
 .. code:: c++
-    :number-lines:
 
     #include <stdio.h>
 
@@ -411,7 +402,6 @@ You can define your own types, too! Let's create a simple "type alias" with
 the ``typedef`` keyword:
 
 .. code:: c++
-    :number-lines:
 
     #include <stdio.h>
 
@@ -438,7 +428,6 @@ Enum (short for "Enumeration")
 Enums essentially let you give names to integers.
 
 .. code:: c++
-    :number-lines:
 
     #include <stdio.h>
 
@@ -471,7 +460,6 @@ Structs can contain multiple different types -- even other structs! Each type
 inside a struct is called a "field".
 
 .. code:: c++
-    :number-lines:
 
     #include <stdio.h>
 
@@ -524,7 +512,6 @@ Programmers are lazy though, so they got in the habit of using the ``typedef``
 keyword to just make ``Car`` always mean  ``struct Car``.
 
 .. code:: c++
-    :number-lines:
 
     enum CarType {SEDAN, TRUCK, SUV};
     typedef enum CarType CarType;
@@ -541,7 +528,6 @@ keyword to just make ``Car`` always mean  ``struct Car``.
 You can even do the ``typedef`` in one line, though it looks a little peculiar:
 
 .. code:: c++
-    :number-lines:
 
     typedef enum CarType { ... } CarType;
     typedef struct Car { ... } Car;
@@ -550,7 +536,6 @@ You can even do the ``typedef`` in one line, though it looks a little peculiar:
 In C++, this ``typedef`` thing is done **automatically**, so you can just:
 
 .. code:: c++
-    :number-lines:
 
     enum CarType { ... };
     struct Car { ... };
@@ -591,7 +576,6 @@ math::
 Here's an example of adding 1 to a number:
 
 .. code:: c++
-    :number-lines:
 
     int x = 5;
     x = x + 1;
@@ -601,7 +585,6 @@ That ``x = x + 1;`` is a bit redundant, so C has some more operators to make it
 a bit more concise:
 
 .. code:: c++
-    :number-lines:
 
     int x = 5;
     x += 1;
@@ -613,7 +596,6 @@ exactly what you'd expect.
 For the case of adding 1 and subtracting 1, there are two *unary* operators:
 
 .. code:: c++
-    :number-lines:
 
     int x = 5;
     x++; // x is now 6
@@ -630,7 +612,6 @@ meaning they can go before or after the variable they operate on, respectively.
 The usage does change slightly:
 
 .. code:: c++
-    :number-lines:
 
     int x = 5;
     int y = ++x * 4;
@@ -641,6 +622,26 @@ The usage does change slightly:
     int b = a++ * 4;
     // a was incremented after it was used, so b = 5 * 4 which is 20
     // and a is now 6
+
+**Where Are My Python Types?**
+
+Those of you coming from Python might be wondering where floor division ``//``
+and exponentiation ``**`` went.
+
+For floor division, you have to cast to ``int`` after the division:
+
+.. code:: c++
+
+    double floor = (int) 4.4 / 3.3;
+
+For exponentiation, you need to use the C ``math.h`` library:
+
+.. code:: c++
+
+    #include <math.h>
+    double exp = pow(4.0, 3.0);
+
+``math.h`` also has your trig functions, logarithms, absolute value, et cetera.
 
 Logical Operators
 ^^^^^^^^^^^^^^^^^
@@ -756,7 +757,6 @@ An ``if`` statement only executes the code within its scope if an expression
 evalutates to ``true`` (or any non-zero value).
 
 .. code:: c++
-    :number-lines:
 
     if (condition) {
         // Execute this code if condition is true
@@ -765,7 +765,6 @@ evalutates to ``true`` (or any non-zero value).
 Optionally, you can define an ``else`` clause:
 
 .. code:: c++
-    :number-lines:
 
     if (condition) {
         // Execute this code if condition is true
@@ -777,7 +776,6 @@ If you want to check for yet another condition, but only if the previous check
 failed, use ``else if``:
 
 .. code:: c++
-    :number-lines:
 
     if (condition) {
         // Execute this code if condition is true
@@ -792,7 +790,6 @@ when we programmed in assembly. It allows you to jump code execution to some
 arbitrary place in your program.
 
 .. code:: c++
-    :number-lines:
 
     if (condition) {
         // Execute this code if condition is true
@@ -810,7 +807,6 @@ constructs like ``if``. If you can, you should completely avoid the use of
 Here's one of the dangers that ``goto`` introduces:
 
 .. code:: c++
-    :number-lines:
 
     int x = 9;
     goto mylabel;
@@ -823,7 +819,6 @@ about our next keyword.
 Suppose you have the following situation:
 
 .. code:: c++
-    :number-lines:
 
     enum CarType {SEDAN, TRUCK, SUV};
 
@@ -849,7 +844,6 @@ would need to perform more and more checks, which is inefficient.
 We can fix this with a ``switch`` statement.
 
 .. code:: c++
-    :number-lines:
 
     enum CarType {SEDAN, TRUCK, SUV};
 
@@ -881,7 +875,6 @@ keep executing after it jumps. Here's what would happen if we didn't have
 ``break``:
 
 .. code:: c++
-    :number-lines:
 
     enum CarType {SEDAN, TRUCK, SUV};
 
@@ -908,7 +901,6 @@ can fix this by adding scopes to our ``case`` blocks:
 
 
 .. code:: c++
-    :number-lines:
 
     enum CarType {SEDAN, TRUCK, SUV};
 
@@ -943,7 +935,6 @@ The ``while`` loop repeatedly executes code while its condition is true.
 This is an infinite loop:
 
 .. code:: c++
-    :number-lines:
 
     while (1) {
         // Execute this code repeatedly forever, because 1 is always true
@@ -953,7 +944,6 @@ We often don't want our code to run forever, so let's add a counter variable
 to limit our ``while`` loop to 4 cycles:
 
 .. code:: c++
-    :number-lines:
 
     int count = 0;
     while (count < 4) {
@@ -973,7 +963,6 @@ The ``do while`` loop executes the code in the loop's scope before evaluating
 whether it should run again.
 
 .. code:: c++
-    :number-lines:
 
     int count = 5;
     do {
@@ -991,7 +980,6 @@ statement. And we can skip a cycle with the ``continue`` statment. Here's a
 program that prints the even numbers up to 10:
 
 .. code:: c++
-    :number-lines:
 
     int count = 0;
     while (1) {
@@ -1016,7 +1004,6 @@ C provides a helpful construct that allows us to keep our ``count`` variable
 self-contained:
 
 .. code:: c++
-    :number-lines:
 
     for (int i = 0; i < 4; i++) {
         printf("%d\n", i);
@@ -1039,7 +1026,6 @@ You can leave any of these clauses empty, too. We can abuse this fact to make
 a really funny looking infinite loop:
 
 .. code:: c++
-    :number-lines:
 
     for (;;) {
         // Repeat forever because second clause is always true
@@ -1065,7 +1051,6 @@ the ``&`` "addressof" operator. This is not the same operator as logical AND.
 They just ran out of special symbols on the keyboard, I guess.
 
 .. code:: c++
-    :number-lines:
 
     #include <stdio.h>
 
@@ -1123,7 +1108,6 @@ larger object like a ``struct`` that you want to pass into a function. Take our
 ``struct Car`` and our ``printMaxSpeed()`` from earlier:
 
 .. code:: c++
-    :number-lines:
 
     #include <stdio.h>
 
@@ -1159,7 +1143,6 @@ time we call ``printMaxSpeed``, we are copying 12 bytes of memory.
 We can reduce this burden by passing a pointer to a Car instead of a whole Car.
 
 .. code:: c++
-    :number-lines:
 
     #include <stdio.h>
 
@@ -1196,7 +1179,6 @@ We've run into another problem, though: we've accidentally modified
 let us touch ``car``:
 
 .. code:: c++
-    :number-lines:
 
     void printMaxSpeed(const struct Car *car) {
         // Dereference car and access its maxSpeed
@@ -1210,7 +1192,6 @@ makes it easier to access members of pointers to structs called the
 "Arrow Operator":
 
 .. code:: c++
-    :number-lines:
 
     void printMaxSpeed(const struct Car *car) {
         // Dereference car and access its maxSpeed with the "->" operator
@@ -1222,8 +1203,33 @@ called "passing by reference". Programmers did this so much, that C++ added a
 super cool feature called "reference types", which we'll take a closer look at
 in a later section: :ref:`reference-types`.
 
-The Asterisk Placement Debate
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+**The Asterisk Placement Debate**
+
+The asterisk denoting that a variable is a pointer can also be put on the type
+of the variable. Actually, all three of these do the same thing:
+
+.. code:: c++
+
+    int *ptr1;
+    int* ptr2;
+    int * ptr3;
+
+Which one is the best is a hotly debated topic. The second option seems more
+intuitive because the type is "int pointer", so ``int*`` reads nicely. However,
+this line of thinking breaks down in the following situation:
+
+.. code:: c++
+
+    int* ptr1, ptr2;
+
+In this example, ``ptr1`` is a pointer, but ``ptr2`` is in fact not a pointer.
+This is clear in option 1:
+
+.. code:: c++
+
+    int *ptr1, *ptr2;
+
+Now, both ``ptr1`` and ``ptr2`` are pointers.
 
 Pointer Arithmetic
 ^^^^^^^^^^^^^^^^^^
