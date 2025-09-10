@@ -1,5 +1,3 @@
-.. _`embedded-primer`:
-
 Embedded Primer
 ===============
 
@@ -8,15 +6,21 @@ What *is* Embedded Software, Anyways?
 
 In short, embedded software bridges the gap between the rover's electronics and
 higher-level software like Autonomy and Basestation. We write our embedded
-software in **C++** using the **Arduino Framework**. More on that here:
+software in **C++** using the **Arduino Framework**. More on that
+:doc:`here <../learning-material/arduino-framework>`.
 
 Writing embedded software is in many ways similar to writing code for a regular
 computer just like you would in CS 1570, but with some extra constraints.
 
 To manage different versions of our software and to deal with multiple people
-working on the same project simultaneously, we use **git**. More on that here:
+working on the same project simultaneously, we use **git**. More on that
+:doc:`here <../learning-material/intro-to-git>`.
 
 Here's some software terms you might hear:
+
+Integrated Circuit (IC)
+    One or more entire circuits shrunk down and fit into a single chip. These
+    chips typically adhere to some standard package like SOIC or TSSOP.
 
 Microcontroller
     A single-chip processor that contains all the hardware it needs to

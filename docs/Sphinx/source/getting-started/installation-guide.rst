@@ -1,5 +1,3 @@
-.. _`installation-guide`:
-
 Installation Guide
 ==================
 
@@ -71,14 +69,13 @@ GitHub Desktop comes with its own internal version of git, but if you want to
 use it with VS Code or the command line, you'll need to install it separately.
 You can also just use GitHub Desktop for everything, but it's more annoying.
 
-You can download git for your system here: https://git-scm.com/downloads
+You can download git for your system `here <https://git-scm.com/downloads>`_.
 
 However, depending on your system, there might be better alternatives.
 
 .. collapse:: Windows
 
-    For Windows, I recommend using Git for Windows which you can find here:
-    https://gitforwindows.org/
+    For Windows, I recommend using Git for Windows which you can find `here <https://gitforwindows.org/>`_.
     It comes with a bash emulator called "git bash" which allows you to run
     scripts that were written for linux. It's also just a really nice terminal.
 

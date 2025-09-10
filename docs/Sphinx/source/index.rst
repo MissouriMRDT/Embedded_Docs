@@ -13,7 +13,7 @@ tips & tricks, and best practices for writing our embedded software.
     :alt: Teensy-Henge
 
 If you're a noob, here are some instructions to get you set up:
-:ref:`getting-started`.
+:doc:`getting-started/index`.
 
 .. toctree::
     getting-started/index
