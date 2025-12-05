@@ -27,6 +27,24 @@ denoted with ``.c`` and C++ source code is typically denoted with ``.cpp``.
 
 For these examples, assume we have a file ``main.c``.
 
+The Compiler
+^^^^^^^^^^^^
+
+The main difference between C++ and Python is that C++ is a *compiled*
+language. That means that a program called a *compiler* must translate your
+code into machine instructions specific to your system before your computer
+can run it. Python, on the other hand, is an *interpreted* language, meaning
+a program called an *interpreter* reads your code line by line in real time.
+This makes C++ a whole lot faster than Python since there isn't a whole extra
+program running between your code and your machine. The downside is that you
+must compile C++ before you can run it, while Python runs immediately.
+
+Another difference is that Python is a "scripting" language, so when your
+program runs, the Python interpreter begins at the top of the file and executes
+code until it reaches the end. In C++, code will begin executing in the
+``main()`` function (wherever in your program that may be).
+
+
 Functions
 ---------
 
@@ -36,7 +54,7 @@ Function (also called a Method or a Procedure)
     A named segment of code that a program can jump to and execute before
     returning to where it left off.
 
-.. code:: c++
+.. code:: c
 
     int main() {
         return 0;
@@ -53,7 +71,7 @@ For your first program, it's a long-held tradition to write the classic
 It requires interacting with the kernel and its device drivers. Luckily for us,
 C comes with a standard library that does all the heavy lifting for us.
 
-.. code:: c++
+.. code:: c
 
     #include <stdio.h>
 
@@ -66,14 +84,14 @@ C comes with a standard library that does all the heavy lifting for us.
 
 Here, we use ``#include`` to paste all the code from the file ``stdio.h`` at
 the top of our program. That code contains a function called ``printf()`` which
-accepts a string of text as a parameter.
+accepts a string of text as an argument.
 
-Parameter (also called an Argument)
+Argument (also called a parameter)
     A value passed into a function to change what it does.
 
 Now, let's get a little funky by defining some functions of our own:
 
-.. code:: c++
+.. code:: c
 
     #include <stdio.h>
 
@@ -98,6 +116,42 @@ nothing. ``printNumber()``'s return type is ``void``. Note that you can also
 chain functions together. The result of ``add()`` was used as the input for
 ``printNumber()``.
 
+You can only use a function **later in the file than where it was declared**.
+To get around this, we can use a "forward declaration":
+
+.. _forward-declaration-example:
+
+.. code:: c
+
+    #include <stdio.h>
+
+    // Declared, but not defined yet
+    int add(int a, int b);
+    void printNumber(int n);
+
+    int main() {
+        // The compiler knows printNumber() and add() *will* exist
+        printNumber(add(10, -2));
+        return 0;
+    }
+
+    // Definitions
+    void printNumber(int n) {
+        printf("%d", n);
+    }
+
+    int add(int a, int b) {
+        return a + b;
+    }
+
+>>> 8
+
+.. note::
+
+    It is standard to put all of your forward declarations in a separate file
+    called a **header**. Header files are a huge part of C and C++, but we'll
+    cover them in a :ref:`later section <header-files>`.
+
 Variables
 ---------
 
@@ -107,7 +161,7 @@ it's a little hard to read. Let's tweak it to use a variables.
 Variable
     A name given to a value to save it for later.
 
-.. code:: c++
+.. code:: c
 
     #include <stdio.h>
 
@@ -153,7 +207,7 @@ Scope
 
 In C, a new scope is created between every pair of curly braces ``{}``.
 
-.. code:: c++
+.. code:: c
 
     // Global scope
     int sum;
@@ -218,14 +272,27 @@ them to be positive with the ``unsigned`` keyword. Example::
     unsigned int ui = 21U;
     unsigned long ul = 21UL;
 
+Note the extra letters added to the end of the numbers. These specify the type
+of number that C should assign. C also allows you to assign number in different
+numeric bases:
+
+====== ===================== =====================
+Prefix Base                  Example
+====== ===================== =====================
+(none) Base 10               ``int i = 42;``
+0b     Binary (Base 2)       ``int i = 0b101010;``
+0o     Octal (Base 8)        ``int i = 0o52;``
+0x     Hexidecimal (Base 16) ``int i = 0x2A;``
+====== ===================== =====================
+
 All variables can also be declared as ``const`` which prevents them from being
 accidentally changed.
 
-.. code:: c++
+.. code:: c
 
     int main() {
         float f1 = 3.64f;
-        const float f2 = 6.78;
+        const float f2 = 6.78f;
         f1 = 4.64f; // OK
         f2 = f1; // ERROR: assigning to const
         return 0;
@@ -249,7 +316,7 @@ Well Python has to do a lot behind the scenes to get variables to work like
 that. In C, variables are allocated next to each other one by one in a region
 of memory called the "stack" which you can imagine like a stack of books.
 
-.. code:: c++
+.. code:: c
 
     int main() {
         int a = 1;
@@ -295,7 +362,7 @@ problem is especially prevalent in the microcontroller wold because
 architectures can vary wildly between chips. To make code more portable, C
 provides *exact-width integer types*.
 
-.. code:: c++
+.. code:: c
 
     // Contains definitions for exact-width integer types
     #include <stdint.h>
@@ -310,7 +377,7 @@ These will appear quite a lot once we get into Arduino code.
 
 You can get the size in bytes of any type with the ``sizeof`` operator:
 
-.. code:: c++
+.. code:: c
 
     #include <stdint.h>
 
@@ -333,7 +400,7 @@ Sometimes you need to assign, say, a decimal number to an integer. You can't
 change the type of a variable in C, so some extra work has to happen to convert
 a decimal value into an integer. This is called "casting":
 
-.. code:: c++
+.. code:: c
 
     #include <stdio.h>
 
@@ -401,7 +468,7 @@ Defining Your Own Types
 You can define your own types, too! Let's create a simple "type alias" with
 the ``typedef`` keyword:
 
-.. code:: c++
+.. code:: c
 
     #include <stdio.h>
 
@@ -427,7 +494,7 @@ Enum (short for "Enumeration")
 
 Enums essentially let you give names to integers.
 
-.. code:: c++
+.. code:: c
 
     #include <stdio.h>
 
@@ -459,7 +526,7 @@ Structs are super useful when you need multiple groups of similar variables.
 Structs can contain multiple different types -- even other structs! Each type
 inside a struct is called a "field".
 
-.. code:: c++
+.. code:: c
 
     #include <stdio.h>
 
@@ -503,6 +570,8 @@ There's also another type in C called a "union", but their use is discouraged
 in C++, so I won't cover them here, but you can learn about them `here <https://www.geeksforgeeks.org/c/c-unions/>`_
 if you're curious.
 
+.. _peculiar-typedef-pattern:
+
 The Peculiar Typedef Pattern
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
@@ -511,7 +580,7 @@ car. C keeps separate lists of names for structs, enums, and unions.
 Programmers are lazy though, so they got in the habit of using the ``typedef``
 keyword to just make ``Car`` always mean  ``struct Car``.
 
-.. code:: c++
+.. code:: c
 
     enum CarType {SEDAN, TRUCK, SUV};
     typedef enum CarType CarType;
@@ -525,9 +594,10 @@ keyword to just make ``Car`` always mean  ``struct Car``.
 
     Car myCar; // No need for the extra struct keyword!
 
-You can even do the ``typedef`` in one line, though it looks a little peculiar:
+It's very common to do the ``typedef`` in one line, though it looks a little
+peculiar:
 
-.. code:: c++
+.. code:: c
 
     typedef enum CarType { ... } CarType;
     typedef struct Car { ... } Car;
@@ -567,6 +637,12 @@ Symbol Operation
 \-     Subtraction
 ====== ===================
 
+.. note::
+
+    Unlike Python, all statements bust be executed *in the body of a function*.
+    From this point on, there will be many examples that omit ``int main()``
+    for the sake of brevity.
+
 You can use parentheses ``()`` to override order of operations like in normal
 math::
 
@@ -575,7 +651,7 @@ math::
 
 Here's an example of adding 1 to a number:
 
-.. code:: c++
+.. code:: c
 
     int x = 5;
     x = x + 1;
@@ -584,7 +660,7 @@ Here's an example of adding 1 to a number:
 That ``x = x + 1;`` is a bit redundant, so C has some more operators to make it
 a bit more concise:
 
-.. code:: c++
+.. code:: c
 
     int x = 5;
     x += 1;
@@ -595,7 +671,7 @@ exactly what you'd expect.
 
 For the case of adding 1 and subtracting 1, there are two *unary* operators:
 
-.. code:: c++
+.. code:: c
 
     int x = 5;
     x++; // x is now 6
@@ -611,7 +687,7 @@ Binary Operator
 meaning they can go before or after the variable they operate on, respectively.
 The usage does change slightly:
 
-.. code:: c++
+.. code:: c
 
     int x = 5;
     int y = ++x * 4;
@@ -623,20 +699,20 @@ The usage does change slightly:
     // a was incremented after it was used, so b = 5 * 4 which is 20
     // and a is now 6
 
-**Where Are My Python Types?**
+**Where Are My Python Operators?**
 
 Those of you coming from Python might be wondering where floor division ``//``
 and exponentiation ``**`` went.
 
 For floor division, you have to cast to ``int`` after the division:
 
-.. code:: c++
+.. code:: c
 
-    double floor = (int) 4.4 / 3.3;
+    double floor = (int)(4.4 / 3.3);
 
 For exponentiation, you need to use the C ``math.h`` library:
 
-.. code:: c++
+.. code:: c
 
     #include <math.h>
     double exp = pow(4.0, 3.0);
@@ -725,7 +801,7 @@ right.
 +---------------------------------------------------+
 | ``==`` ``!=``                                     |
 +---------------------------------------------------+
-| ``&```                                            |
+| ``&``                                             |
 +---------------------------------------------------+
 | ``^``                                             |
 +---------------------------------------------------+
@@ -756,7 +832,7 @@ Branching
 An ``if`` statement only executes the code within its scope if an expression
 evalutates to ``true`` (or any non-zero value).
 
-.. code:: c++
+.. code:: c
 
     if (condition) {
         // Execute this code if condition is true
@@ -764,7 +840,7 @@ evalutates to ``true`` (or any non-zero value).
 
 Optionally, you can define an ``else`` clause:
 
-.. code:: c++
+.. code:: c
 
     if (condition) {
         // Execute this code if condition is true
@@ -775,7 +851,7 @@ Optionally, you can define an ``else`` clause:
 If you want to check for yet another condition, but only if the previous check
 failed, use ``else if``:
 
-.. code:: c++
+.. code:: c
 
     if (condition) {
         // Execute this code if condition is true
@@ -789,7 +865,7 @@ The ``goto`` statement is a vestige of an older time. It's a carry over from
 when we programmed in assembly. It allows you to jump code execution to some
 arbitrary place in your program.
 
-.. code:: c++
+.. code:: c
 
     if (condition) {
         // Execute this code if condition is true
@@ -806,7 +882,7 @@ constructs like ``if``. If you can, you should completely avoid the use of
 
 Here's one of the dangers that ``goto`` introduces:
 
-.. code:: c++
+.. code:: c
 
     int x = 9;
     goto mylabel;
@@ -818,7 +894,7 @@ about our next keyword.
 
 Suppose you have the following situation:
 
-.. code:: c++
+.. code:: c
 
     enum CarType {SEDAN, TRUCK, SUV};
 
@@ -843,7 +919,7 @@ would need to perform more and more checks, which is inefficient.
 
 We can fix this with a ``switch`` statement.
 
-.. code:: c++
+.. code:: c
 
     enum CarType {SEDAN, TRUCK, SUV};
 
@@ -874,7 +950,7 @@ tells the program to perform a jump to a label, the program will normally just
 keep executing after it jumps. Here's what would happen if we didn't have
 ``break``:
 
-.. code:: c++
+.. code:: c
 
     enum CarType {SEDAN, TRUCK, SUV};
 
@@ -900,7 +976,7 @@ you run into the "crossed variable declaration" problem that ``goto`` had. We
 can fix this by adding scopes to our ``case`` blocks:
 
 
-.. code:: c++
+.. code:: c
 
     enum CarType {SEDAN, TRUCK, SUV};
 
@@ -934,7 +1010,7 @@ Loops
 The ``while`` loop repeatedly executes code while its condition is true.
 This is an infinite loop:
 
-.. code:: c++
+.. code:: c
 
     while (1) {
         // Execute this code repeatedly forever, because 1 is always true
@@ -943,7 +1019,7 @@ This is an infinite loop:
 We often don't want our code to run forever, so let's add a counter variable
 to limit our ``while`` loop to 4 cycles:
 
-.. code:: c++
+.. code:: c
 
     int count = 0;
     while (count < 4) {
@@ -962,7 +1038,7 @@ to limit our ``while`` loop to 4 cycles:
 The ``do while`` loop executes the code in the loop's scope before evaluating
 whether it should run again.
 
-.. code:: c++
+.. code:: c
 
     int count = 5;
     do {
@@ -979,7 +1055,7 @@ We can also exit from a ``while`` loop prematurely with the ``break``
 statement. And we can skip a cycle with the ``continue`` statment. Here's a
 program that prints the even numbers up to 10:
 
-.. code:: c++
+.. code:: c
 
     int count = 0;
     while (1) {
@@ -1003,7 +1079,7 @@ that it's accessible in the scope above the ``while`` loop where it isn't used.
 C provides a helpful construct that allows us to keep our ``count`` variable
 self-contained:
 
-.. code:: c++
+.. code:: c
 
     for (int i = 0; i < 4; i++) {
         printf("%d\n", i);
@@ -1025,7 +1101,7 @@ second expression. Here, we increment ``i`` by 1.
 You can leave any of these clauses empty, too. We can abuse this fact to make
 a really funny looking infinite loop:
 
-.. code:: c++
+.. code:: c
 
     for (;;) {
         // Repeat forever because second clause is always true
@@ -1047,10 +1123,10 @@ Pointer
     A variable that contains a memory address.
 
 Every variable has an associated memory address. You can grab this address with
-the ``&`` "addressof" operator. This is not the same operator as logical AND.
+the ``&`` "addressof" operator. This is *not* the same operator as logical AND.
 They just ran out of special symbols on the keyboard, I guess.
 
-.. code:: c++
+.. code:: c
 
     #include <stdio.h>
 
@@ -1078,7 +1154,7 @@ memory addresses every run. If we want to access our original variable, we can
 But why is this useful? Well, now we can pass "handles" to our variables and
 let them be changed elsewhere. Consider this function:
 
-.. code:: c++
+.. code:: c
 
     void swap(int *xptr, int *yptr) {
         // Save the value at address xptr into temp
@@ -1107,7 +1183,7 @@ Another situation in which you might want to pass a pointer is if you have a
 larger object like a ``struct`` that you want to pass into a function. Take our
 ``struct Car`` and our ``printMaxSpeed()`` from earlier:
 
-.. code:: c++
+.. code:: c
 
     #include <stdio.h>
 
@@ -1142,7 +1218,7 @@ time we call ``printMaxSpeed``, we are copying 12 bytes of memory.
 
 We can reduce this burden by passing a pointer to a Car instead of a whole Car.
 
-.. code:: c++
+.. code:: c
 
     #include <stdio.h>
 
@@ -1178,7 +1254,7 @@ We've run into another problem, though: we've accidentally modified
 ``maxSpeed``! To prevent this, we can use ``const`` so that our compiler won't
 let us touch ``car``:
 
-.. code:: c++
+.. code:: c
 
     void printMaxSpeed(const struct Car *car) {
         // Dereference car and access its maxSpeed
@@ -1191,7 +1267,7 @@ The ``(*car).`` thing is kind of cumbersome, so C has a special shortcut that
 makes it easier to access members of pointers to structs called the
 "Arrow Operator":
 
-.. code:: c++
+.. code:: c
 
     void printMaxSpeed(const struct Car *car) {
         // Dereference car and access its maxSpeed with the "->" operator
@@ -1208,7 +1284,7 @@ in a later section: :ref:`reference-types`.
 The asterisk denoting that a variable is a pointer can also be put on the type
 of the variable. Actually, all three of these do the same thing:
 
-.. code:: c++
+.. code:: c
 
     int *ptr1;
     int* ptr2;
@@ -1218,61 +1294,931 @@ Which one is the best is a hotly debated topic. The second option seems more
 intuitive because the type is "int pointer", so ``int*`` reads nicely. However,
 this line of thinking breaks down in the following situation:
 
-.. code:: c++
+.. code:: c
 
     int* ptr1, ptr2;
 
 In this example, ``ptr1`` is a pointer, but ``ptr2`` is in fact not a pointer.
 This is clear in option 1:
 
-.. code:: c++
+.. code:: c
 
     int *ptr1, *ptr2;
 
 Now, both ``ptr1`` and ``ptr2`` are pointers.
 
-Pointer Arithmetic
-^^^^^^^^^^^^^^^^^^
-
-Wait... Why does a pointer have a type like ``int`` if it's just a memory
-address? Aren't all memory addresses the same? Well, yes. But C can use that
-extra type information to know how to treat your variable.
-
 Arrays
 ^^^^^^
 
-Strings
-^^^^^^^
+Array
+    A fixed-length list of one type of value.
+
+You can define an array with square brackets. Unlike other languages like Java
+and C#, the brackets go on the variable name, not the type. You must also
+specify the size of this array. This size is part of the type and cannot
+change.
+
+Just like regular variables, memory is *not* initialized to 0 when you first
+declare an array variable, so you have to initialize it manually.
+
+You can access elements of an array with the index operator ``[]``. Note that
+in C, indexes start at 0. The reason why will be clear in the next section.
+
+.. code:: c
+
+    // Define an array of 12 integers
+    int myIntegerArray[12];
+
+    // Initialize myIntegerArray to 0
+    for (int i = 0; i < 12; i++) {
+        myIntegerArray[i] = 0;
+    }
+
+    // Get first element. Note that indexing starts at 0!
+    int firstValue = myIntegerArray[0];
+
+    // Set last element. Note that the last element is 11, not 12
+    myIntegerArray[11] = 42;
+
+    // C lets you access values out of bounds, which returns garbage memory
+    int illegalValue = myIntegerArray[12];
+
+For convenience, you can also define your values when you first declare your
+array variable using an "initializer list".
+
+.. code:: c
+
+    // Because of the initializer list, the size is implied. The array is of type int[4]
+    int myIntegerArray[] = {1, 2, 3, 4};
+
+    int i = myIntegerArray[2]; // i is 3
+
+    // The initializer list only works when you declare the variable
+    // myIntegerArray[] = {1, 2, 3, 4}; // Syntax error
+
+    // You cannot assign an array to another array. You must copy each element
+    int otherArray[4];
+
+    // otherArray = myIntegerArray; // Syntax error
+    for (int i = 0; i < 4; i++) {
+        otherArray[i] = myIntegerArray[i];
+    }
+
+``sizeof`` works as you expect, returning the size of one element times the
+total number of elements.
+
+.. code:: c
+
+    int64_t myIntegerArray[4];
+
+    // numberOfBytes = 4 elements * 8 bytes = 32 total bytes
+    size_t numberOfBytes = sizeof(myIntegerArray);
+    // numberOfElements = 32 total bytes / 8 bytes = 4 elements
+    size_t numberOfElements = sizeof(myIntegerArray) / sizeof(myIntegerArray[0])
+
+``size_t`` is a special type you'll see a lot when dealing with arrays. It is
+an integer with a size guaranteed to be large enough to store the size of the
+largest possible object on the given system.
+
+**Dynamic Memory Allocation**
+
+What if you don't know the size of your array beforehand? For this, you can
+allocate an array on the *heap* instead of the *stack*. C and C++ have
+different ways they like to do this, but in both cases you are asking your OS
+to find an unused chunk of memory of a given size and give you its address.
+
+In C, you use the ``malloc()`` (memory-allocate) function. Every time you use
+``malloc()`` you *must* use ``free()``. Otherwise, the program will not
+deallocate the memory. This is called a "Memory Leak".
+
+Memory Leak
+    When a program fails to deallocate memory it has allocated, reducing the
+    amount of new memory it can use.
+
+.. code:: c
+
+    int main() {
+        int *myIntArray = malloc(4 * sizeof(int));
+        // Memory is uninitialized
+        for (int i = 0; i < 4; i++) {
+            myIntArray[i] = i;
+        }
+        // myIntArray is now [0, 1, 2, 3]
+
+        // No memory leaks allowed!
+        free(myIntArray);
+    }
+
+Woah! Why is ``myIntArray`` a pointer? And how are we accessing it like an
+array? We'll look at that in the next section.
+
+Pointer Arithmetic and Decay
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+In C, arrays and pointers work in the same way. All a computer needs to
+know about an array is the memory address of its first element and its size.
+So when you tell a computer to "look at the nth element in this array", what
+it is actually doing is adding an offset to that first memory address to find
+the address of the nth element.
+
+All that's really saying is that the index operator ``[]`` is actually a
+"*dereference with offset*" operator. Let's look at an example:
+
+.. code:: c
+
+    int myIntArray[4] = {1, 2, 3, 4};
+    int element;
+    // The following two lines are equivalent:
+    element = myIntArray[2]; // element = 3
+    element = *(&myIntArray + 2); // element = 3
+
+Let's unpack that last line:
+
+1. We take the address of ``myIntArray`` with ``&``. Instead of returning an
+   ``int[4]`` pointer, C will treat arrays differently and return an ``int``
+   pointer to the first element.
+2. We add ``2`` to the address of the first element. An ``int`` is 4 bytes, so
+   instead of the resulting memory address being 2 bytes higher, the resulting
+   address is 2 * 4 = 8 bytes higher.
+3. Finally, outside the parentheses, we dereference the new memory address with
+   the ``*`` operator, giving us the value at that memory address.
+
+Adding type-size-aware offsets to pointers is known as "Pointer Arithmetic".
+**This is also why indexing starts at 0, because the first element's address
+plus an offset of 0 is the first element's address.**
+
+We can write a very odd-looking ``for`` loop with pointers by incrementing a
+pointer to an element of an array instead of incrementing an index:
+
+.. code:: c
+
+    myIntArray[4] = {1, 2, 3, 4};
+
+    // Get address of the array. Arrays will implicitly cast into pointers
+    int *iterator = myIntegerArray;
+    // Calculate address *after* the last element (first address + 4*sizeof(int))
+    int *end = iterator + 4;
+    // iterator steps forward sizeof(int) bytes each loop until it passes the end
+    for (; iterator != end; iterator++) {
+        printf("%d, ", *iterator);
+    }
+
+>>> 1, 2, 3, 4,
+
+C has a very annoying mechanic where you cannot pass arrays into functions. The
+worst part is that it *looks* like you can.
+
+.. code:: c
+
+    void printArraySize(int evilArray[]) {
+        printf("printArraySize: Array is %d bytes", sizeof(evilArray));
+    }
+
+    int main() {
+        int myIntegerArray[4];
+        printf("main: Array should be %d bytes", sizeof(myIntegerArray));
+        printArraySize(myIntegerArray);
+        return 0;
+    }
+
+Ok, what do you think will be printed out? This is the output:
+
+>>> main: Array should be 16 bytes
+>>> printArraySize: Array is 8 bytes
+
+Sike! You just fell for the oldest trick in the books. So what's going on here?
+
+In C, arrays "decay" into pointers when passed into functions. This is because
+function arguments must always be the same size, and arrays can vary in size,
+so C just passes the array's address so that all arrays become 8 bytes.
+
+The following definitions of ``printArraySize()`` are all equivalent:
+
+.. code:: c
+
+    void printArraySize(int *evilArray) {...}
+    void printArraySize(int evilArray[]) {...}
+    void printArraySize(int evilArray[4]) {...}
+    void printArraySize(int evilArray[4000]) {...}
+
+``evilArray`` is an ``int*`` in all of these. Sometimes you'll see programmers
+specify ``evilArray[4]`` to communicate that the function just assumes the
+given pointer has 4 valid values after it, but C does not enforce this, so you
+can pass any array into the function.
+
+If you want to pass an array of variable length into a function, you must pass
+the size separately:
+
+.. code:: c
+
+    void printArray(int array[], int length) {
+        for (int i = 0; i < length; i++) {
+            printf("%d, ", array[i]);
+        }
+    }
+
+    int main() {
+        int myIntegerArray[4] = {1, 2, 3, 4};
+        printArray(myIntegerArray, 4);
+        return 0;
+    }
+
+>>> 1, 2, 3, 4,
+
+C Strings
+^^^^^^^^^
+
+String
+    A sequence of characters representing human-readable text
+
+In C, strings are a little weird. Imagine you're a programmer in the olden days
+and you have *very* limited memory. There are two ways you might go about
+storing an arbitrary-length string:
+
+**Strategy 1**: Store the number of characters that will be in the string and
+then a pointer to the first character.
+
+- Pros: You immediately know the size of the string
+- Cons: You need several extra bytes to store the size
+
+**Strategy 2**: Store just the pointer to the first character and add a special
+character at the end of the string to mark where the string stops.
+
+- Pros: Only requires one extra byte to end the string
+- Cons: You have to count until you reach the special char to find the length
+
+In the early days of computing, different languages chose different sides.
+Languages like Basic and Fortran adopted strategy 1, known as
+*prefixed strings*. C went with strategy 2, known as *null terminated strings*,
+appending the ASCII value ``0`` to the end of **every string**. 
+
+C proceeded to take over the whole world. Even though computers have relatively
+unlimited memory now and prefixed strings would be much nicer to work with,
+we're stuck with decades upon decades of code using the old null terminated
+C strings.
+
+So, if your operating system was written in C (which it almost definitely is)
+then you will have to deal with null terminated strings.
+
+We can see this null terminator ourselves by letting C fill in the size of a
+char array for us:
+
+.. code:: c
+
+    const char charArray[] = "abc";
+    printf("charArray is of type char[%d]\n", sizeof(charArray));
+    printf("The 4th value of charArray is: %d", charArray[3]);
+
+>>> charArray is of type char[4]
+>>> The 4th value of charArray is: 0
+
+Since the size is implied by the null terminator, you won't usually see strings
+represented as a sized char array. Instead, you'll almost always see strings
+denoted by ``const char *``
+
+.. code:: c
+
+    // All string literals implicitly add a null terminator
+    const char *string = "abc";
+    // %s denotes a string in printf
+    printf("%s\n", string);
+    // puts is another helpful function that adds a newline \n automatically
+    puts(string);
+
+To get the length of a C string, we can include the ``<string.h>`` header which
+gives us some useful utility functions like ``strlen()`` which counts the chars
+from the beginning of our string until (but not including) the null terminator.
+
+.. code:: c
+
+    #include <string.h>
+    #include <stdio.h>
+
+    const char *string = "abc";
+    // We can trick strlen by adding a null char in the middle
+    const char *tricky = "abc\0def";
+
+    int main() {
+        printf("string length: %d", strlen(string));
+        printf("tricky length: %d", strlen(tricky));
+    }
+
+>>> string length: 3
+>>> tricky length: 3
+
+What if we forget to add the null terminator and then use ``strlen()``? Well,
+it will continue counting, eventually leaving the string and going straight
+into the rest of your program's memory. There are other functions like
+``strnlen()`` that fix this. Check out the `official reference for string.h <https://en.cppreference.com/w/c/header/string.html>`_
+to see all the functions available to you.
+
+.. _header-files:
 
 Header Files
 ------------
 
+In Java and Python, you use ``import`` to access code in other files. In C++
+you use the ``#include`` directive.
+
+Unlike Python's ``import`` which loads and runs the imported code, C++ simply
+pastes in the entire contents of the included file.
+
+This brings us to one of C++'s strange, rather dated features: the header file.
+Header files allow us to tell the compiler what variables and functions will
+exist in our source code before it goes compiling.
+
+Recall :ref:`this earlier example <forward-declaration-example>` where we
+forward-declared some functions so that they could be used earlier in the file
+than where they were defined. We could pull those forward declarations into a
+header file:
+
+In ``MyProgram.h``:
+
+.. code:: c
+
+    // TODO: add header guards (see later section)
+    int add(int a, int b);
+    void printNumber(int n);
+
+
+In ``MyProgram.c``:
+
+.. code:: c
+
+    // The include line will be replaced with the contents of MyProgram.h
+    #include "MyProgram.h"
+    #include <stdio.h>
+
+    int main() {
+        // The compiler knows printNumber() and add() *will* exist
+        printNumber(add(10, -2));
+        return 0;
+    }
+
+    // We can define these wherever we want since it is declared in the header
+    void printNumber(int n) {
+        printf("%d", n);
+    }
+    int add(int a, int b) {
+        return a + b;
+    }
+
+>>> 8
+
+Note that we used "quotes" instead of <angle brackets> for including our own
+header file. This tells the compiler to look for the file locally before going
+hunting through your computer for it. As a rule of thumb, you should use quotes
+for your program's header files and angle brackets for libraries.
+
 Preprocessor Macros
 ^^^^^^^^^^^^^^^^^^^
+
+The C compiler can do a whole lot more than just paste files! The language is
+equipped with a whole second "meta language" that runs before your code is
+even translated to machine instructions. This language is called the
+*preprocessor*. The preprocessor does not care about types or rules, all it
+does is paste, replace, and delete chunks of code. Oh, and it also deletes your
+comments for the compiler.
+
+Macro
+    A modification made by the preprocessor before the code is compiled.
+
+.. image:: preprocessor-example.jpg
+
+*Example of the preprocessor used for evil*
+
+``#define X Y``
+    Find and replace all instances of "X" in the code with "Y".
+
+``#if COND`` / ``#endif``
+    Only include the following code up until ``#endif`` if ``COND != 0``
+
+``#elif`` and ``#else``
+    Like ``else if`` and ``else`` but for ``#if``
+
+``#defined(X)``
+    Evaluates to 1 if "X" has been defined previously with ``#define X``
+
+``#ifdef X`` and ``#ifndef X``
+    Short for ``#if defined(X)`` and ``#if !defined(X)``, respectively
+
+``#error "message"``
+    Forces the compiler to abort compilation and output the given message.
+
+There are also *function-like macros*, *variadic macros*, and more, but you'll
+quickly stray into evil-incarnate-territory with those ones! If you really
+want to know, refer to the `official C macro documentation <https://gcc.gnu.org/onlinedocs/cpp/Macros.html>`_.
+
+Macros are helpful for platform-specific behavior:
+
+.. code:: c
+
+    #if defined(WIN32) && !defined(UNIX)
+        // Do windows stuff
+    #elif defined(UNIX) && !defined(WIN32)
+        // Do linux stuff
+    #else
+    #error "Compiling for unknown platform!"
+    #endif
+
+Macros are also helpful for removing debug code in production:
+
+.. code:: c
+
+    // Set DEBUG to 0 to disable debug messages
+    #define DEBUG 1
+    // Production code
+    #if DEBUG
+        printf("Debug message!");
+    #endif
+    // More production code
+
+Header Guards
+^^^^^^^^^^^^^
+
+What happens if we accidentally include the same header twice? Well, the
+contents will be pasted twice, causing the compiler to freak out. This might
+seem like a silly mistake to make, but consider that your header file might've
+been included in *other* header files, which you might import by mistake.
+
+In ``Utilities.h``:
+
+.. code:: c
+
+    void helpfulFunction();
+
+In ``MyProgram.h``:
+
+.. code:: c
+
+    #include "Utilities.h"
+
+    int add(int a, int b);
+    void printNumber(int n);
+
+In ``MyProgram.c``:
+
+.. code:: c
+
+    #include "Utilities.h"
+    #include "MyProgram.h" // Uh oh!
+
+    // More code
+
+What the code looks like after includes are expanded:
+
+.. code:: c
+
+    void helpfulFunction();
+    void helpfulFunction(); // Uh oh!
+    int add(int a, int b);
+    void printNumber(int n);
+    // More code
+
+To fix this, we use a clever trick called a "*header guard*":
+
+In ``Utilities.h``:
+
+.. code:: c
+    
+    #ifndef UTILITIES_H
+    #define UTILITIES_H
+
+    void helpfulFunction();
+
+    #endif
+
+In ``MyProgram.h``:
+
+.. code:: c
+
+    #ifndef MY_PROGRAM_H
+    #define MY_PROGRAM_H
+
+    #include "Utilities.h"
+
+    int add(int a, int b);
+    void printNumber(int n);
+
+    #endif
+
+In ``MyProgram.c``: [same as before]
+
+What the code looks like after includes are expanded:
+
+.. code:: c
+    
+    // Include Utilities.h
+    #ifndef UTILITIES_H
+    #define UTILITIES_H
+    void helpfulFunction();
+    #endif
+    // End Utilities.h
+    // Include MyProgram.h
+    #ifndef MY_PROGRAM_H
+    #define MY_PROGRAM_H
+    // Include Utilities.h within MyProgram.h
+    #ifndef UTILITIES_H // UTILITIES_H is already defined! Cut out this code!
+    //#define UTILITIES_H
+    //void helpfulFunction();
+    #endif
+    // End Utilities.h within MyProgram.h
+    int add(int a, int b);
+    void printNumber(int n);
+    #endif
+    // End MyProgram.h
+    // The rest of MyProgram.c
+
+As you can see, the second time ``Utilities.h`` is included, its contents are
+ignored by the preprocessor because of the first ``#define UTILITIES_H``.
 
 C++: C With Classes
 -------------------
 
+Finally! We've left the realm of C and we are ready to enter the world of C++!
+
+C++ was invented by Danish computer scientist Bjarne Stroustrup in 1979. It
+began as a *transpiler* called CFront that translated the new language to C,
+similar to how TypeScript transpiles to JavaScript today. As the language got
+more complex, an independent compiler was developed for C++.
+
+Though most C code is also valid C++ code, C++ has continued to evolve over
+the years. Modern C++ looks quite different from its mother language. On MRDT,
+we don't make use of most of the newer features, generally sticking to features
+original to C. This approach is often called "C with classes". In fact, C++ was
+originally called "C with classes" by its creator in its early days.
+
+The differences between C and C++ begin stacking up all the way back from our
+Hello World program:
+
+.. code:: c++
+
+    #include <iostream>
+
+    int main() {
+        std::cout << "Hello, World!" << std::endl;
+        return 0;
+    }
+
+Yeah... I don't know that made Bjorne think that this was easier to read than
+C's ``printf()``. If you want to use the old C libraries, they're still here,
+you just have to include the library with a ``c`` prepended to its name:
+
+.. code:: c++
+
+    #include <cstdio>
+
+    int main() {
+        std::printf("Hello, World!");
+        return 0;
+    }
+
+Notice that instead of ``printf()`` being globally available, we have to
+access it through the ``std::`` namespace.
+
 Namespaces
 ^^^^^^^^^^
+
+One thing that immediately jumps out at you when reading C++ code is the
+abundance of ``::``. This double colon usually denotes a *namespace*.
+
+One major improvement C++ makes over C is namespaces. A namespace allows you
+to have multiple variables with the same name, so long as they belong to
+separate namespaces.
+
+.. code:: c++
+
+    #include <iostream>
+    namespace A {
+        int variable = 1;
+        void function() {
+            std::cout << variable << std::endl;
+        }
+    }
+    namespace B {
+        int variable = 2;
+        void function() {
+            std::cout << variable << std::endl;
+        }
+    }
+
+    int main() {
+        A::function();
+        B::function();
+        return 0;
+    }
+
+>>> 1
+>>> 2
+
+Here, we would normally have a naming conflict. In C, you would have to rename
+your variables and functions like ``A_variable`` and ``B_function()``.
+
+One thing you may see in example code is ``using namespace``. This dumps all of
+a namespace's members into the global namespace. Programmers often use this to
+avoid typing ``std::`` over and over, but in production codebases, this is
+usually avoided to prevent namespace pollution (accidental name conflicts).
+
+.. code:: c++
+
+    #include <iostream>
+
+    using namespace std;
+
+    int main() {
+        // No std:: needed!
+        cout << "Hello, World!" << endl;
+    }
+
+Some more examples:
+
+.. code:: c++
+
+    #include <iostream>
+    namespace A {
+        int variable = 1;
+        void function() {
+            std::cout << variable << std::endl;
+        }
+    }
+    namespace B {
+        using namespace std; // Only effective in namespace B
+        int variable = 2;
+        void function() {
+            cout << variable << endl;
+        }
+    }
+
+    using A::function; // Pull in function() from namespace A
+    int main() {
+        function(); // A::function()
+        B::function();
+        return 0;
+    }
 
 Structs and Enums Again (C++)
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Great news! Structs and enums no longer require the
+:ref:`peculiar typedef pattern <peculiar-typedef-pattern>`!
+You can simply define them and use them normally:
+
+.. code:: c++
+
+    enum CarType {SEDAN, TRUCK, SUV};
+
+    struct Car {
+        CarType type;
+        float maxSpeed;
+        int numberOfWheels;
+    };
+
+    Car myCar{SEDAN, 110.0f, 4};
+
+C-style enums dump all their values into the parent namespace. In C++, you
+can use ``enum class`` to prevent this:
+
+.. code:: c++
+
+    // use enum class to prevent OTHER from conflicting
+    enum class CarType {SEDAN, TRUCK, SUV, OTHER};
+    enum class EngineType {V4, V8, OTHER};
+
+    struct Car {
+        CarType type;
+        EngineType engine;
+        float maxSpeed;
+        int numberOfWheels;
+    };
+    Car myCar{CarType::SEDAN, EngineType::OTHER, 110.0f, 4};
+
 Classes
 ^^^^^^^
 
-Constructors
-^^^^^^^^^^^^
+Object Oriented Programming (OOP) is a powerful idea that has shaped the way
+we've written code for decades. It began with old languages like Simula and
+Smalltalk, but was immortalized by C++. At the heart of this paradigm is the
+idea of a *class*. At it's heart, a class is a way to couple *data* and
+*functionality* together.
 
-Member Functions
-^^^^^^^^^^^^^^^^
+**Member Functions**
 
-Visibility
-^^^^^^^^^^
+In C, you can group data members together with a struct, then write functions
+that operate on those structs:
 
-Inheritance
-^^^^^^^^^^^
+.. code:: C
+
+    struct CarData {
+        float speed;
+        float position;
+    };
+
+    void driveCar(CarData *carPtr, float acceleration, float frameTime) {
+        carPtr->speed += acceleration * frameTime;
+        carPtr->position += carPtr->speed * frameTime;
+    }
+
+    struct CarData car1{0.0f, 10.0f}, car2{5.0f, -2.5f};
+    int main() {
+        while (1) {
+            driveCar(&car1, 4.3f, 0.01f);
+            driveCar(&car1, 7.8f, 0.01f);
+            std::cout << "Car 1: " << car1.position
+                    << ", Car 2: " << car2.position << std::endl;
+        }
+    }
+
+In C++, we can wrap the data and operation together by adding a
+*member function* to our struct:
+
+.. code:: C++
+
+    struct Car {
+        float speed;
+        float position;
+        void drive(float acceleration, float frameTime) {
+            speed += acceleration * deltaTime;
+            position += speed * frameTime;
+        }
+    };
+
+    Car car1{0.0f, 10.0f}, car2{5.0f, -2.5f};
+    int main() {
+        while (true) {
+            car1.drive(4.3f, 0.01f);
+            car2.drive(7.8f, 0.01f);
+            std::cout << "Car 1: " << car1.position
+                    << ", Car 2: " << car2.position << std::endl;
+        }
+    }
+
+It's a subtle change, but we've just fundamentally shifted our semantic idea of
+a car from a *car that gets driven* to a *car that drives itself*.
+
+**Visibility**
+
+The second big idea of OOP is *encapsulation*. Instead of making all member
+variables publicly accessible, we can only allow member variables to be read
+through member functions.
+
+.. code:: c++
+
+    //struct Car {
+    class Car {
+    private:
+        float speed = 0;
+        float position = 0;
+    public:
+        void drive(float acceleration, float frameTime) {...}
+        float getSpeed() {
+            return speed;
+        }
+        float getPosition() {
+            return position;
+        }
+    };
+    // We can no longer initialize speed and position since they're private
+    Car car1, car2;
+    int main() {
+        while (true) {
+            car1.drive(4.3f, 0.01f);
+            car2.drive(7.8f, 0.01f);
+            std::cout << "Car 1: " << car1.getPosition()
+                    << ", Car 2: " << car2.getPosition() << std::endl;
+        }
+    }
+
+The ``class`` keyword means nearly the same thing as ``struct``. The only
+difference is that by default, all members of a class are ``private``, but
+all members of a struct are ``public``. 
+
+**Constructors**
+
+But we still need to set the position and speed initially, even if we don't
+want our code accidentally changing them outside of ``drive()``. We can create
+a *constructor*:
+
+.. code:: c++
+
+    //struct Car {
+    class Car {
+    private:
+        float m_speed = 0;
+        float m_position = 0;
+    public:
+        Car(float speed, float position) {
+            m_speed = speed;
+            m_position = position;
+        }
+        void drive(float acceleration, float frameTime) {...}
+        float getSpeed() {...}
+        float getPosition() {...}
+    };
+    // Construct cars with initial speeds and positions
+    Car car1(0.0f, 10.0f), car2(5.0f, -2.5f);
+    int main() {
+        while (true) {
+            car1.drive(4.3f, 0.01f);
+            car2.drive(7.8f, 0.01f);
+            std::cout << "Car 1: " << car1.getPosition()
+                    << ", Car 2: " << car2.getPosition() << std::endl;
+        }
+    }
+
+
+But why in the world would you want to write all that extra boilerplate?
+In old C codebases, you had structs all over the place, and *any* part of the
+codebase could go in and modify them. This led to all sorts of bugs that were
+very hard to track. Encapsulation improves code security and maintainability.
+
+**Destructors**
+
+The opposite of a constructor, a destructor is a function to be called when
+an instance of a class gets deleted or goes out of scope.
+
+.. code:: c++
+
+    class Car {
+    private:
+        float m_speed = 0;
+        float m_position = 0;
+    public:
+        Car(float speed, float position) {
+            m_speed = speed;
+            m_position = position;
+            std::cout << "Made car! Position: " << m_position << std::endl;
+        }
+        // Car destructor
+        ~Car() {
+            std::cout << "Car go boom! Position: " << m_position << std::endl;
+        }
+        void drive(float acceleration, float frameTime) {...}
+        float getSpeed() {...}
+        float getPosition() {...}
+    };
+
+    int main() {
+        {
+            Car car1(0.0f, 10.0f);
+            {
+                Car car2(5.0f, -2.5f);
+            } // car2 goes out of scope
+        } // car1 goes out of scope
+        return 0;
+    }
+
+>>> Made car! Position: 10.0
+>>> Made car! Position: -2.5
+>>> Car go boom! Position: -2.5
+>>> Car go boom! Position: 10.0
+
+**Inheritance**
+
+The final pillar of OOP is *polymorphism*. This allows you to write multiple
+different classes that share functions in common such that you can substitute
+them out for each other.
+
+C++ inheritance is a complicated mess, so I won't try to summarize it here.
+Check out `this article <https://www.geeksforgeeks.org/cpp/inheritance-in-c/>`_`
+for a good explanation.
+
+Many of our libraries use polymorphism to remain modular and extensible. For
+example, a ``RoveJoint`` is a class that drives a motor to a position based on
+encoder and limit switch feedback. The constructor for a RoveJoint takes a
+pointer to a ``RoveMotor``. You can't make a RoveMotor, though. You can only
+make one of several motor types like ``RoveVESC`` or ``RoveVNH``.
+Each of these motor classes drives a different kind of motor, but they all
+inherit the ``drive()`` function from their base class ``RoveMotor``. And
+implement it in their own way.
+
+So when RoveJoint takes its ``RoveMotor*`` and calls ``m_roveMotor->drive()``,
+whatever RoveMotor you gave it will call its own ``drive()``.
+
+.. code:: c++
+
+    // VESCMotor.drive() drives a VESC through UART
+    RoveVESC VESCMotor(&Serial1);
+    // DCMotor.drive() drives a brushed DC motor with a VNH chip
+    RoveVNH DCMotor(PWM, IN_A, IN_B, CS);
+
+    // You can create a RoveJoint with either type, because both RoveVESC* and
+    // RoveVNH* inherit from RoveMotor*
+    RoveJoint Axis1(&VESCMotor);
+    RoveJoint Axis2(&DCMotor);
+
+    // [Configure Axis1 and Axis2 here]
+
+    // Use them both in the same way
+    // The RoveJoint is calling drive() internally, which both motors implement
+    // in a unique way
+    Axis1.setAngle(90);
+    Axis2.setAngle(60);
+
+C++ Strings
+-----------
+
+C++ Dynamic Arrays
+------------------
 
 .. _`reference-types`:
 
