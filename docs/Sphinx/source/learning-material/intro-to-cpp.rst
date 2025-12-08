@@ -1395,6 +1395,9 @@ Memory Leak
     When a program fails to deallocate memory it has allocated, reducing the
     amount of new memory it can use.
 
+Memory leaks are just one of several common memory management errors. See
+the :ref:`manual-memory-errors` section for more.
+
 .. code:: c
 
     int main() {
@@ -2001,7 +2004,8 @@ Smalltalk, but was immortalized by C++. At the heart of this paradigm is the
 idea of a *class*. At it's heart, a class is a way to couple *data* and
 *functionality* together.
 
-**Member Functions**
+Member Functions
+^^^^^^^^^^^^^^^^
 
 In C, you can group data members together with a struct, then write functions
 that operate on those structs:
@@ -2055,7 +2059,8 @@ In C++, we can wrap the data and operation together by adding a
 It's a subtle change, but we've just fundamentally shifted our semantic idea of
 a car from a *car that gets driven* to a *car that drives itself*.
 
-**Visibility**
+Visibility
+^^^^^^^^^^
 
 The second big idea of OOP is *encapsulation*. Instead of making all member
 variables publicly accessible, we can only allow member variables to be read
@@ -2092,7 +2097,8 @@ The ``class`` keyword means nearly the same thing as ``struct``. The only
 difference is that by default, all members of a class are ``private``, but
 all members of a struct are ``public``. 
 
-**Constructors**
+Constructors
+^^^^^^^^^^^^
 
 But we still need to set the position and speed initially, even if we don't
 want our code accidentally changing them outside of ``drive()``. We can create
@@ -2131,7 +2137,8 @@ In old C codebases, you had structs all over the place, and *any* part of the
 codebase could go in and modify them. This led to all sorts of bugs that were
 very hard to track. Encapsulation improves code security and maintainability.
 
-**Destructors**
+Destructors
+^^^^^^^^^^^
 
 The opposite of a constructor, a destructor is a function to be called when
 an instance of a class gets deleted or goes out of scope.
@@ -2172,14 +2179,72 @@ an instance of a class gets deleted or goes out of scope.
 >>> Car go boom! Position: -2.5
 >>> Car go boom! Position: 10.0
 
-**Inheritance**
+Declaring a Class in the Header
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+In the prior examples, ``Car`` was defined entirely in the source file. Usually
+you will declare your class in the header file and define its member functions
+in the source.
+
+In ``Car.h``:
+
+.. code:: c++
+
+    #ifndef CAR_H
+    #define CAR_H
+
+    class Car {
+    public:
+        Car(float speed, float position);
+        ~Car();
+        void drive(float acceleration, float frameTime);
+        float getSpeed();
+        float getPosition();
+
+    private:
+        float m_speed = 0;
+        float m_position = 0;
+    };
+
+    #endif
+
+Whether to put the ``private`` section at the top or at the bottom is hotly
+debated among programmers. The benefit of keeping it on the bottom is that
+users of your class only care about what they can actually use, so when they
+read your header file that information should come first.
+
+In ``Car.cpp``:
+
+.. code:: c++
+
+    #include "Car.h"
+
+    Car::Car(float speed, float position) {
+        m_speed = speed;
+        m_position = position;
+        std::cout << "Made car! Position: " << m_position << std::endl;
+    }
+    // Car destructor
+    Car::~Car() {
+        std::cout << "Car go boom! Position: " << m_position << std::endl;
+    }
+    void Car::drive(float acceleration, float frameTime) {...}
+    float Car::getSpeed() {...}
+    float Car::getPosition() {...}
+
+Note how the class behaves like a *namespace*, requiring ``::`` to specify that
+you intend to define ``Car::drive()`` rather than a new independent ``drive()``
+function.
+
+Inheritance
+^^^^^^^^^^^
 
 The final pillar of OOP is *polymorphism*. This allows you to write multiple
 different classes that share functions in common such that you can substitute
 them out for each other.
 
 C++ inheritance is a complicated mess, so I won't try to summarize it here.
-Check out `this article <https://www.geeksforgeeks.org/cpp/inheritance-in-c/>`_`
+Check out `this article <https://www.geeksforgeeks.org/cpp/inheritance-in-c/>`_
 for a good explanation.
 
 Many of our libraries use polymorphism to remain modular and extensible. For
@@ -2214,15 +2279,371 @@ whatever RoveMotor you gave it will call its own ``drive()``.
     Axis1.setAngle(90);
     Axis2.setAngle(60);
 
-C++ Strings
------------
+New and Delete
+--------------
 
-C++ Dynamic Arrays
-------------------
+In C, we allocated dynamic memory with ``malloc()`` and deallocated it with
+``free()``. In C++, we have the ``new[]`` and ``delete[]`` operators.
+
+.. code:: c++
+
+    int main() {
+        // int *myIntArray = malloc(4 * sizeof(int));
+        int *myIntArray = new int[4]; // No extra size calculation needed!
+        
+        // Memory is uninitialized
+        for (int i = 0; i < 4; i++) {
+            myIntArray[i] = i;
+        }
+        // myIntArray is now [0, 1, 2, 3]
+
+        // No memory leaks allowed!
+        delete[] myIntArray;
+    }
+
+We can also dynamically allocate individual classes. Pointers to objects are
+useful for when your object is optional. You don't need the ``[]`` on the new
+and delete operators in this case:
+
+.. code:: c++
+
+    // Initialize to null
+    Car *maybeCar = nullptr;
+
+    int main() {
+        if (!maybeCar) {
+            // Allocate and construct a new Car
+            maybeCar = new Car(0.0f, 10.0f);
+        }
+
+        maybeCar->drive(4.3f, 0.01f);
+
+        // No memory leaks allowed!
+        delete maybeCar;
+        // Reset to null
+        maybeCar = nullptr;
+    }
+
+Note that deleting a nullptr is not an error, it just does nothing.
+
+.. _manual-memory-errors:
+
+Memory Management Pitfalls
+^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Manual memory management in C and C++ introduces a whole host of nasty bugs.
+Here are a few that you'll likely run into:
+
+**Null Pointer Dereference**
+    Attempting to access a ``nullptr``. This happens when you've forgotten to
+    allocate a pointer and its value has been set to null.
+
+.. code:: c++
+
+    int *iptr = nullptr;
+    int i = *iptr; // Whoops!
+    iptr = new int[4];
+
+**Segmentation Fault**
+    Attempting to access memory outside of that which you've allocated. Usually
+    this means you've gone past the end of a buffer or you haven't allocated
+    a pointer and it's some random value.
+
+.. code:: c++
+
+    int *iptr; // Random, unititialized value
+    int i = *iptr; // Probably will sefgault
+
+    iptr = new int[4];
+    i = iptr[4]; // Out of bounds!
+    // Might sefgault if the memory outside our buffer is not also owned by our program
+
+
+**Use After Free**
+    Attempting to use memory after you've called ``delete`` or ``free()`` on
+    it. This one is particularily nasty because the chances are that the old
+    memory will still be intact, since it isn't overwritten until it is
+    allocated elsewhere.
+
+.. code:: c++
+
+    int *iptr = new int[4];
+    delete[] iptr;
+    int i = iptr[0]; // Whoops!
+
+**Double Free**
+    Attempting to free memory after you've already deallocated it.
+
+.. code:: c++
+
+    int *iptr = new int[4];
+    delete[] iptr;
+    delete[] iptr; // Whoops!
+
+**Memory Leak**
+    Forgetting to free memory after you've allocated it. This mistake is almost
+    inevitable, and you're bound to have at least a small, hard to track leak.
+    This is usually why some applications on your computer get slower and use
+    more memory when you leave them open for a few days.
+
+.. code:: c++
+
+    int *iptr = new int[4];
+    *iptr = new int[4]; // Oops! Overwrote the old pointer. Now it will never be deleted!
+    delete[] iptr;
+
+In modern C++ (like in the Autonomy codebase) you will normally use
+`smart pointers <https://www.geeksforgeeks.org/cpp/smart-pointers-cpp/>`_
+which are much safer. But for our purposes, raw pointers are fine.
 
 .. _`reference-types`:
 
 Reference Types
 ---------------
 
+References are basically non-nullable pointers. They are denoted by a ``&`` on
+the variable name. References are generally safer than pointers because they
+cannot be null and they cannot be reseated (get pointed at something else).
+This makes errors like null pointer dereferences less likely.
 
+.. code:: c++
+
+    #include <iostream>
+    int main() {
+        int i = 42;
+        int &ref = i; // No "&" needed to assign the reference!
+        i += 1; // Modify i which modifies ref
+        std::cout << ref << std::endl; // No "*" needed to access!
+        ref += 1; // Modify ref which modifies i
+        std::cout << i << std::endl; // No "*" needed to access!
+
+        int &ref2; // ERROR: you MUST assign a reference where you declare it!
+    }
+
+>>> 43
+>>> 44
+
+Note that references have the same usage and assignment semantics as regular
+values.
+
+Recall how in C, we had to pass a pointer to a struct if we didn't want to copy
+it, and a const struct if we also didn't want to modify it:
+
+.. code:: c
+
+    #include <stdio.h>
+
+    enum CarType {SEDAN, TRUCK, SUV};
+
+    struct Car {
+        enum CarType type;
+        float maxSpeed;
+        int numberOfWheels;
+    };
+
+    // Access, but do not modify car
+    void printMaxSpeed(const struct Car *car) {
+        // Dereference car and access its maxSpeed
+        printf("%f", car->maxSpeed);
+    }
+
+    // Access and modify car
+    void doubleMaxSpeed(struct Car *car) {
+        // Dereference car and modify its maxSpeed
+        car->maxSpeed *= 2;
+    }
+
+    int main() {
+        struct Car myCar = {TRUCK, 107.5f, 4};
+        doubleMaxSpeed(&myCar);
+        printMaxSpeed(&myCar);
+        return 0;
+    }
+
+>>> 215.0
+
+C++ references make things nicer since references have the same semantics as
+value types:
+
+.. code:: c
+
+    #include <iostream>
+
+    enum class CarType {SEDAN, TRUCK, SUV};
+
+    struct Car {
+        CarType type;
+        float maxSpeed;
+        int numberOfWheels;
+    };
+
+    // Access, but do not modify car
+    void printMaxSpeed(const Car &car) {
+        std::cout << car.maxSpeed << std::endl;
+    }
+
+    // Access and modify car
+    void doubleMaxSpeed(Car &car) {
+        car.maxSpeed *= 2; // "." like a value instead of "->" like a pointer
+    }
+
+    int main() {
+        Car myCar{CarType::TRUCK, 107.5f, 4};
+        doubleMaxSpeed(myCar); // No "&" required! Passed by reference!
+        printMaxSpeed(myCar);
+        return 0;
+    }
+
+>>> 215.0
+
+This also means you can switch ``printMaxSpeed()`` between passing by value and
+passing by reference without changing all the code at every callsite. In C, if
+you changed a function to take a pointer-to-value instead of a value, you would
+have to hunt down all occurrences of the function and insert ``&`` everwhere.
+
+Here's another example of a simple function that swaps two integers:
+
+.. code:: c++
+
+    #include <iostream>
+
+    /* OLD way with stinky pointers:
+    void swap(int *a, int *b) {
+        int temp = *a;
+        *a = *b;
+        *b = temp;
+    }
+    */
+
+    // NEW way with referenes!
+    void swap(int &a, int &b) {
+        int temp = a;
+        a = b;
+        b = temp;
+    }
+
+    int main() {
+        int i1 = 3, i2 = 4;
+        std::cout << i1 << ", " << i2 << std::endl;
+
+        // swap(&i1, &i2); // OLD way with stinky pointers
+        swap(i1, i2);
+
+        std::cout << i1 << ", " << i2 << std::endl;
+        return 0;
+    }
+
+>>> 3, 4
+>>> 4, 3
+
+When Should I Use Values, Pointers, Or References?
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Pass by **value** if your argument:
+
+- Is *trivially copyable*, meaning it's like less than 8 bytes. Just take this
+  to mean ``float``s, ``int``s, ``bool``s, and any number-y type. This includes
+  ``enum``s since they're just a single number.
+- Does not need to change the original variable you pass into the function.
+
+Pass by **reference** if your argument:
+
+- Needs to change the original variable you pass into the function.
+- Must always have a valid value (can't be null)
+
+Pass by **const reference** if your argument:
+
+- Is not trivially copyable (most ``struct``s and ``class``es).
+- Should *not* change the original variable you pass into the function.
+- Must always have a valid value (can't be null)
+
+Pass by **pointer** if your argument:
+
+- Needs to change the original variable you pass into the function.
+- Is optional (might be null).
+
+Pass by **const pointer** if your argument:
+
+- Is not trivially copyable
+- Should *not* change the original variable you pass into the function.
+- Is optional (might be null).
+
+Reference Invalidation
+^^^^^^^^^^^^^^^^^^^^^^
+
+While references are never allowed to be assigned null, sometimes the object
+they point to can stop existing. This can happen if you return a reference to a
+local stack allocated variable.
+
+.. code:: c++
+
+    #include <iostream>
+
+    int &refMaker() {
+        int i = 42;
+        return i; // i is stack allocated: i is deleted after the function ends
+    }
+
+    int main() {
+        int &i = refMaker(); // refMaker produces an invalid reference!
+        std::cout << i << std::endl; // ERROR
+        return 0;
+    }
+
+The only time you can return a reference from a function is if you know
+*for sure* that what it points to will still exist after the function ends.
+This could include member variables of a class or global variables.
+
+.. code:: c++
+
+    // myCar will probably exist for a long time, so returning by reference
+    // will avoid an unnecessary copy without allowing modification of the car
+    const Car &myCar = parkingLot.getCarByOwner("Me");
+    myCar.printMaxSpeed();
+
+Strings (C++)
+-------------
+
+C++ ammends the sins of C's null terminated strings with ``std::string``.
+C++ string is a prefixed string that knows its own length.
+
+.. code:: c++
+
+    #include <string>
+    #include <iostream>
+
+    int main() {
+        std::string prefixedString = "abc";
+        std::cout << prefixedString << ", " << prefixedString.size() << std::endl;
+        // You can still convert it to a null terminated string
+        const char *nullTerminated = prefixedString.c_str();
+    }
+
+>>> abc, 3
+
+A C++ string allocates its memory with the ``new`` operator and calls
+``delete`` in its destructor. This means that if you pass it by value, it will
+copy itself, creating a new string that allocates more memory on the heap. This
+can cause performance issues, so should be avoided when necessary. You can do
+this simply with a const reference:
+
+.. code:: c++
+
+    #include <string>
+    #include <iostream>
+
+    void printBackwards(const std::string &string) {
+        // Iterate backwards over string characters
+        for (int i = string.size() - 1; i >= 0; i--) {
+            std::cout << string[i];
+        }
+        std::cout << std::endl;
+    }
+
+    int main() {
+        std::string string = "abc";
+        // No extra string copy made since printBackwards() takes a const ref
+        printBackwards(string);
+    }
+
+>>> cba
