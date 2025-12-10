@@ -152,6 +152,54 @@ To get around this, we can use a "forward declaration":
     called a **header**. Header files are a huge part of C and C++, but we'll
     cover them in a :ref:`later section <header-files>`.
 
+Function Overloading
+^^^^^^^^^^^^^^^^^^^^
+
+In C++ **but not in C**, you can name multiple functions the same thing and
+let the compiler decide which one needs to be called based on the types you
+pass to it:
+
+.. code:: c
+
+    #include <stdio.h>
+
+    int add(int a, int b) {
+        return a + b;
+    }
+    float add(float a, float b) {
+        return a + b;
+    }
+
+    int main() {
+        int i = add(1, 2); // int add(int, int) is called
+        float f = add(1.0f, 2.0f); // float add(float, float) is called
+        printf("Integer: %d, Float: %f", i, f);
+        return 0;
+    }
+
+>>> Integer: 3, Float: 3.000000
+
+In C, all functions must have unique names, so you would have to name the two
+versions of ``add()`` differently. The convention is to append an extra letter:
+
+.. code:: c
+
+    #include <stdio.h>
+
+    int addi(int a, int b) {
+        return a + b;
+    }
+    float addf(float a, float b) {
+        return a + b;
+    }
+
+    int main() {
+        int i = addi(1, 2);
+        float f = addf(1.0f, 2.0f);
+        printf("Integer: %d, Float: %f", i, f);
+        return 0;
+    }
+
 Variables
 ---------
 
@@ -239,6 +287,35 @@ would get "undefined behavior".
 Undefined Behavior
     When something illegal happens so the output of your program is
     unpredictable.
+
+Static Variables
+^^^^^^^^^^^^^^^^
+
+The ``static`` keyword is confusing because it can mean multiple different
+things depending on the context. If it's in a function body, it allows a
+variable to persist between function calls.
+
+.. code:: c++
+
+    #include <stdio.h>
+
+    int callMe(int printNum) {
+        static int timesCalled = 0; // This is run only the first time
+        timesCalled = timesCalled + 1; // Increase timesCalled variable by 1
+        printf("Number: %d, Times Called: %d\n", printNum, timesCalled);
+    }
+
+    int main() {
+        callMe(420);
+        callMe(69);
+        callMe(-1000);
+        // printf("Times Called: %d", timesCalled); ERROR: timesCalled only exists in callMe()
+        return 0;
+    }
+
+>>> Number: 420, Times Called: 1
+>>> Number: 69, Times Called: 2
+>>> Number: -1000, Times Called: 3
 
 Types
 -----
@@ -889,6 +966,7 @@ Here's one of the dangers that ``goto`` introduces:
     int y = 10; // ERROR: crossed variable definition
     mylabel: printf("%d", x + y);
 
+Nevertheless, ``goto`` appears a lot in older code, like in the `Linux kernel <https://www.youtube.com/watch?v=v1Mfirg2-Z8>`_.
 The only reason I am informing you of this evil keyword is so that we can talk
 about our next keyword.
 
@@ -1686,9 +1764,9 @@ comments for the compiler.
 Macro
     A modification made by the preprocessor before the code is compiled.
 
-.. image:: preprocessor-example.jpg
+.. figure:: images/preprocessor-example.jpg
 
-*Example of the preprocessor used for evil*
+    Example of the preprocessor used for evil
 
 ``#define X Y``
     Find and replace all instances of "X" in the code with "Y".
@@ -2542,8 +2620,8 @@ When Should I Use Values, Pointers, Or References?
 Pass by **value** if your argument:
 
 - Is *trivially copyable*, meaning it's like less than 8 bytes. Just take this
-  to mean ``float``s, ``int``s, ``bool``s, and any number-y type. This includes
-  ``enum``s since they're just a single number.
+  to mean ``float``\s, ``int``\s, ``bool``\s, and any number-y type. This
+  includes ``enum``\s since they're just a single number.
 - Does not need to change the original variable you pass into the function.
 
 Pass by **reference** if your argument:
@@ -2553,7 +2631,7 @@ Pass by **reference** if your argument:
 
 Pass by **const reference** if your argument:
 
-- Is not trivially copyable (most ``struct``s and ``class``es).
+- Is not trivially copyable (most ``struct``\s and ``class``\es).
 - Should *not* change the original variable you pass into the function.
 - Must always have a valid value (can't be null)
 

@@ -16,6 +16,9 @@ To manage different versions of our software and to deal with multiple people
 working on the same project simultaneously, we use **git**. More on that
 :doc:`here <../learning-material/intro-to-git>`.
 
+Embedded Software Glossary
+--------------------------
+
 Here's some software terms you might hear:
 
 Integrated Circuit (IC)
@@ -29,6 +32,10 @@ Microcontroller
 Microprocessor
     A processor chip that requires external hardware to function; just the CPU.
 
+Architecture
+    What family a microcontroller belongs to. Each of these "families" shares
+    similar hardware and run on similar machine code.
+
 Integrated Development Environment (IDE)
     A text editor specifically for editing code. Integrated means that it can
     do other stuff like compile and upload code. Examples include Arduino IDE,
@@ -38,13 +45,23 @@ Library
     Code written to be reused between projects. No point in reinventing the
     wheel!
 
+Application Programming Interface (API)
+    The interface where two bits of code meet. Basically a list of each thing a
+    library can do.
+
+Hardware Abstraction Layer (HAL)
+    A library written to simplify programming of a microcontroller. Instead of
+    setting specific registers to control the hardware, you can call a nicely
+    named function that will do all that for you.
+
 Dependency
     A library that a project relies on.
 
 Compiler
     The program that turns your human-readable code into binary that your
     specific microcontroller understands. This is normally integrated into your
-    IDE and runs automatically as part of the upload process.
+    IDE and runs automatically as part of the upload process. You may need a
+    different compiler depending on your microcontroller's architecture.
 
 Flashing
     The process of uploading compiled code to a microcontroller. The code is
