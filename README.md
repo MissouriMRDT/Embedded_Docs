@@ -5,7 +5,7 @@ Design Team. This wiki contains API docs, setup guides, tutorials,
 tips & tricks, and best practices for writing our embedded software.
 
 This is the source code for the documentation which you can find hosted live
-[here]().
+[here](https://docs.themrdt.org/embedded).
 
 ![teensy henge](docs/Sphinx/source/teensy_henge.jpg)
 

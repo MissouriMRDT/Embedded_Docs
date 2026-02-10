@@ -1,6 +1,8 @@
 |mrdt| MRDT Embedded Software Guide
 ===================================
 
+`← Return to RoveSoDocs <https://docs.themrdt.org/>`_
+
 .. |mrdt| image:: logos/mrdt-logo.png
     :width: 50px
 
